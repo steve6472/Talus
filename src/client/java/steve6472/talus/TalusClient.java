@@ -1,0 +1,48 @@
+package steve6472.talus;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import steve6472.talus.keys.ElytraSwap;
+import steve6472.talus.vaults.VaultManager;
+
+/**
+ * Created by steve6472
+ * Date: 10/13/2025
+ * Project: Talus <br>
+ */
+public class TalusClient implements ClientModInitializer
+{
+    public static final KeyMapping.Category TALUS_KEY_CATEGORY = KeyMapping.Category.register(Talus.id("main"));
+    private static TalusClient instance;
+
+    public VaultManager vaultManager;
+
+    @Override
+    public void onInitializeClient()
+    {
+        instance = this;
+
+        ElytraSwap.init();
+        F3DebugRenders.registerDebugEntries();
+
+        vaultManager = new VaultManager();
+        vaultManager.init();
+    }
+
+    public static Component header(Component tail)
+    {
+        return Component
+            .literal("[").withStyle(ChatFormatting.GREEN)
+            .append(Component
+                .literal("Talus").withStyle(ChatFormatting.DARK_GREEN))
+            .append("] ").withStyle(ChatFormatting.GREEN)
+            .append(tail);
+    }
+
+    public static TalusClient instance()
+    {
+        return instance;
+    }
+}

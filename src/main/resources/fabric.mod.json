@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "talus",
+	"version": "${version}",
+	"name": "Talus",
+	"description": "A group of features clone #6472 of Steve finds useful",
+	"authors": [
+		"steve6472"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/talus/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"steve6472.talus.Talus"
+		],
+		"client": [
+			"steve6472.talus.TalusClient"
+		]
+	},
+	"mixins": [
+		"talus.mixins.json",
+		{
+			"config": "talus.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.17.3",
+		"minecraft": "~1.21.9",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

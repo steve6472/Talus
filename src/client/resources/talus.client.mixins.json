@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "steve6472.talus.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"DebugRendererMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

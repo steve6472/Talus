@@ -1,0 +1,22 @@
+{
+  "key.category.talus.main": "Talus",
+
+  "key.talus.swap_elytra": "Swap Elytra/Chestplate",
+
+  "talus.elytra_swap.no_hypixel": "No elytra swap on Hypixel!",
+
+  "talus.vaults.command.already_loaded": "Vaults are already loaded",
+  "talus.vaults.command.vaults_not_loaded": "Vaults are not loaded",
+  "talus.vaults.command.error_save": "Error while saving vaults",
+  "talus.vaults.command.error_load": "Error while loading vaults",
+  "talus.vaults.command.success_save": "Vaults saved",
+  "talus.vaults.command.success_load": "Vaults loaded",
+  "talus.vaults.command.success_reload": "Vaults reloaded",
+  "talus.vaults.command.vaults_highlighted": "Vaults highlighted",
+  "talus.vaults.command.status.not_loaded": "Vaults are not loaded",
+  "talus.vaults.command.status.loaded": "Loaded {} vaults for the current world",
+
+  "talus.vaults.interact.force_mark_open": "Forcibly marked Vault as open",
+  "talus.vaults.interact.vault_open": "Vault open",
+  "talus.vaults.interact.new_vault": "New vault discovered"
+}
