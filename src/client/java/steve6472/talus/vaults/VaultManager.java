@@ -47,7 +47,7 @@ public class VaultManager
 
     public final List<Pair<Long, List<MemoryVault>>> renderedVaults = new ArrayList<>();
     private String worldName;
-    private Map<String, List<MemoryVault>> vaults;
+    private List<MemoryVault> vaults;
 
     public VaultManager()
     {
@@ -139,27 +139,25 @@ public class VaultManager
 
     public Collection<MemoryVault> getVaults(Vec3 center, int radius)
     {
-        List<MemoryVault> memoryVaults = vaults.get(worldName);
-        if (memoryVaults == null)
-            return List.of();
-
-        return memoryVaults.stream().filter(v ->
+        return vaults.stream().filter(v ->
         {
             double v1 = v.position().distToCenterSqr(center.x, center.y, center.z);
             return Math.sqrt(v1) <= radius;
         }).toList();
     }
 
-    public void highlightAll(Vec3 center, int radius)
+    public int highlightAll(Vec3 center, int radius)
     {
         clearHighlights();
-        highlight(center, radius, true, true);
-        highlight(center, radius, true, false);
-        highlight(center, radius, false, true);
-        highlight(center, radius, false, false);
+        int highlighted = 0;
+        highlighted += highlight(center, radius, true, true);
+        highlighted += highlight(center, radius, true, false);
+        highlighted += highlight(center, radius, false, true);
+        highlighted += highlight(center, radius, false, false);
+        return highlighted;
     }
 
-    public void highlight(Vec3 center, int radius, boolean locked, boolean ominious)
+    public int highlight(Vec3 center, int radius, boolean locked, boolean ominious)
     {
         List<MemoryVault> list = getVaults(center, radius)
             .stream()
@@ -169,6 +167,7 @@ public class VaultManager
         long timeTarget = System.currentTimeMillis() + HIGHLIGHT_DURATION;
 
         renderedVaults.add(Pair.of(timeTarget, list));
+        return list.size();
     }
 
     public void clearHighlights()
@@ -179,10 +178,8 @@ public class VaultManager
     // Returns true if vault was added
     public boolean addVault(MemoryVault memoryVault, boolean replace)
     {
-        List<MemoryVault> memoryVaults = vaults.computeIfAbsent(worldName, ignored -> new ArrayList<>());
-
         MemoryVault previous = null;
-        for (MemoryVault vault : memoryVaults)
+        for (MemoryVault vault : vaults)
         {
             if (vault.position().equals(memoryVault.position()))
             {
@@ -194,14 +191,16 @@ public class VaultManager
         if (previous != null && !replace)
             return false;
 
-        memoryVaults.remove(previous);
-        memoryVaults.add(memoryVault);
+        vaults.remove(previous);
+        vaults.add(memoryVault);
         return true;
     }
 
     /// Return false if an error occured, true otherwise
     public boolean loadVaults()
     {
+        renderedVaults.clear();
+
         if (!Talus.instance().canConfigure)
             return false;
 
@@ -209,17 +208,11 @@ public class VaultManager
         if (loadedVaults == null)
             return false;
 
-        renderedVaults.clear();
-        vaults = new HashMap<>(loadedVaults);
-
-        // replace with mutable version
-        Set<String> strings = new HashSet<>(vaults.keySet());
-        for (String s : strings)
-        {
-            List<MemoryVault> remove = vaults.remove(s);
-            vaults.put(s, new ArrayList<>(remove));
-        }
-
+        // Make mutable
+        List<MemoryVault> memoryVaults = loadedVaults.get(worldName);
+        if (memoryVaults == null)
+            memoryVaults = new ArrayList<>();
+        vaults = new ArrayList<>(memoryVaults);
         return true;
     }
 
@@ -229,7 +222,12 @@ public class VaultManager
         if (!Talus.instance().canConfigure)
             return false;
 
-        return ConfigHelper.saveCodec(CONFIG_FILE.toFile(), CODEC, vaults);
+        Map<String, List<MemoryVault>> loadedVaults = ConfigHelper.loadCodec(CONFIG_FILE.toFile(), CODEC);
+        if (loadedVaults == null)
+            loadedVaults = new HashMap<>();
+        loadedVaults = new HashMap<>(loadedVaults);
+        loadedVaults.put(worldName, vaults);
+        return ConfigHelper.saveCodec(CONFIG_FILE.toFile(), CODEC, loadedVaults);
     }
 
     /// Return false if an error occured, true otherwise
@@ -250,9 +248,6 @@ public class VaultManager
 
     public int getVaultCountForCurrentWorld()
     {
-        List<MemoryVault> memoryVaults = vaults.get(worldName);
-        if (memoryVaults == null)
-            return 0;
-        return memoryVaults.size();
+        return vaults.size();
     }
 }

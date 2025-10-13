@@ -27,8 +27,7 @@ public class VaultsCommand
     private static final Component ERROR_LOAD = Component.translatable("talus.vaults.command.error_load").withStyle(ChatFormatting.RED);
 
     private static final Component SUCCESS_SAVE = Component.translatable("talus.vaults.command.success_save").withStyle(ChatFormatting.WHITE);
-    private static final Component SUCCESS_LOAD = Component.translatable("talus.vaults.command.success_load").withStyle(ChatFormatting.WHITE);
-    private static final Component VAULTS_HIGHLIGHTED = Component.translatable("talus.vaults.command.vaults_highlighted").withStyle(ChatFormatting.WHITE);
+//    private static final Component VAULTS_HIGHLIGHTED = Component.translatable("talus.vaults.command.vaults_highlighted").withStyle(ChatFormatting.WHITE);
 
     private static final Component STATUS_NOT_LOADED = Component.translatable("talus.vaults.command.status.not_loaded").withStyle(ChatFormatting.WHITE);
 //  private static final Component STATUS_LOADED = Component.translatable("talus.vaults.command.status.loaded").withStyle(ChatFormatting.WHITE);
@@ -49,8 +48,8 @@ public class VaultsCommand
                             }
                             Vec3 position = c.getSource().getPosition();
 
-                            vaultManager.highlightAll(position, VaultManager.INTERACT_RADIUS);
-                            c.getSource().sendFeedback(TalusClient.header(VAULTS_HIGHLIGHTED));
+                            int highlithed = vaultManager.highlightAll(position, VaultManager.INTERACT_RADIUS);
+                            c.getSource().sendFeedback(TalusClient.header(Component.translatable("talus.vaults.command.vaults_highlighted", highlithed).withStyle(ChatFormatting.WHITE)));
 
                             return 1;
                         })
@@ -180,7 +179,8 @@ public class VaultsCommand
 
                             if (vaultManager.loadVaults())
                             {
-                                c.getSource().sendFeedback(TalusClient.header(SUCCESS_LOAD));
+                                int i = vaultManager.getVaultCountForCurrentWorld();
+                                c.getSource().sendFeedback(TalusClient.header(Component.translatable("talus.vaults.command.status.loaded", i).withStyle(ChatFormatting.WHITE)));
                                 return 1;
                             }
                             c.getSource().sendError(TalusClient.header(ERROR_LOAD));
@@ -245,30 +245,31 @@ public class VaultsCommand
         int radius = getInteger(c, "radius");
 
         vaultManager.clearHighlights();
+        int highlighted = 0;
 
         if (locked == null)
         {
             if (ominious == null)
             {
-                vaultManager.highlightAll(position, radius);
+                highlighted += vaultManager.highlightAll(position, radius);
             } else
             {
-                vaultManager.highlight(position, radius, true, ominious);
-                vaultManager.highlight(position, radius, false, ominious);
+                highlighted += vaultManager.highlight(position, radius, true, ominious);
+                highlighted += vaultManager.highlight(position, radius, false, ominious);
             }
         } else
         {
             if (ominious == null)
             {
-                vaultManager.highlight(position, radius, locked, true);
-                vaultManager.highlight(position, radius, locked, false);
+                highlighted += vaultManager.highlight(position, radius, locked, true);
+                highlighted += vaultManager.highlight(position, radius, locked, false);
             } else
             {
-                vaultManager.highlight(position, radius, locked, ominious);
+                highlighted += vaultManager.highlight(position, radius, locked, ominious);
             }
         }
 
-        c.getSource().sendFeedback(TalusClient.header(VAULTS_HIGHLIGHTED));
+        c.getSource().sendFeedback(TalusClient.header(Component.translatable("talus.vaults.command.vaults_highlighted", highlighted).withStyle(ChatFormatting.WHITE)));
 
         return 1;
     }
