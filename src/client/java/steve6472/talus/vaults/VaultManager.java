@@ -8,11 +8,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.TrailParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -142,6 +139,7 @@ public class VaultManager
         ClientCommandRegistrationCallback.EVENT.register(VaultsCommand::register);
 
         ClientTickEvents.START_WORLD_TICK.register(VaultsRenderer::register);
+        ClientTickEvents.START_WORLD_TICK.register(VaultPathfinder::register);
     }
 
     public Collection<MemoryVault> getVaults(Vec3 center, int radius)
@@ -203,6 +201,20 @@ public class VaultManager
         return true;
     }
 
+    // Returns true if vault was added
+    public MemoryVault getVault(BlockPos pos)
+    {
+        for (MemoryVault vault : vaults)
+        {
+            BlockPos position = vault.position();
+            if (position.getX() == pos.getX() && position.getY() == pos.getY() && position.getZ() == pos.getZ())
+            {
+                return vault;
+            }
+        }
+        return null;
+    }
+
     /// Return false if an error occured, true otherwise
     public boolean loadVaults()
     {
@@ -245,6 +257,7 @@ public class VaultManager
             ret = saveVaults();
         vaults = null;
         renderedVaults.clear();
+        VaultPathfinder.reset();
         return ret;
     }
 

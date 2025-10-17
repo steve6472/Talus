@@ -23,6 +23,10 @@ public class VaultsRenderer
     private static final RenderSettnigs LOCKED_NORMAL = new RenderSettnigs(16, 0.13, 0xff_cc7a41);
     private static final RenderSettnigs UNLOCKED_NORMAL = new RenderSettnigs(8, 0.08, 0x60_cc7a41);
 
+    private static final int HIGH_QUALITY_DISTANCE = 24 * 24;
+    private static final int MEDIUM_QUALITY_DISTANCE = 48 * 48;
+    private static final int MAX_DISTANCE = 128 * 128;
+
     public static void register(ClientLevel level)
     {
         if (level.getGameTime() % 2 != 0)
@@ -33,8 +37,6 @@ public class VaultsRenderer
             return;
 
         Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        final int highQualityDistance = 24;
-        final int mediumQualityDistance = 48;
 
         long now = System.currentTimeMillis();
 
@@ -54,18 +56,18 @@ public class VaultsRenderer
                 RenderSettnigs c = pick(vault.locked(), vault.ominious());
                 double distance = vault.position().distToCenterSqr(cameraPos.x, cameraPos.y, cameraPos.z);
 
-                if (distance <= highQualityDistance * highQualityDistance)
+                if (distance <= HIGH_QUALITY_DISTANCE)
                 {
-                    FancyCubeHighlighter.render(level, vault.position(), c.count(), c.spawnChance(), 10, c.color(), 1);
-                } else if (distance <= mediumQualityDistance * mediumQualityDistance)
+                    FancyCubeHighlighter.render(level, vault.position(), c.count(), c.spawnChance(), 0, 0, 10, c.color(), 1);
+                } else if (distance <= MEDIUM_QUALITY_DISTANCE)
                 {
                     if (level.getGameTime() % 20 == 0)
-                        FancyCubeHighlighter.render(level, vault.position(), (int) (c.count() * 0.75), c.spawnChance(), 30, c.color(), 3f);
+                        FancyCubeHighlighter.render(level, vault.position(), (int) (c.count() * 0.75), c.spawnChance(), 0, 0, 30, c.color(), 3f);
                 }
-                else if (distance <= VaultManager.INTERACT_RADIUS * VaultManager.INTERACT_RADIUS)
+                else if (distance <= MAX_DISTANCE)
                 {
                     if (level.getGameTime() % 40 == 0)
-                        FancyCubeHighlighter.render(level, vault.position(), (int) (c.count() * 0.5), c.spawnChance(), 60, c.color(), 6f);
+                        FancyCubeHighlighter.render(level, vault.position(), (int) (c.count() * 0.5), c.spawnChance(), 0, 0, 60, c.color(), 6f);
                 }
             }
         }

@@ -2,14 +2,8 @@ package steve6472.talus;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.particle.EndRodParticle;
-import net.minecraft.client.particle.TrailParticle;
-import net.minecraft.core.Registry;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import steve6472.talus.keys.ElytraSwap;
 import steve6472.talus.particle.HighlightParticle;

@@ -17,5 +17,7 @@
 
   "talus.vaults.interact.force_mark_open": "Forcibly marked Vault as open",
   "talus.vaults.interact.vault_open": "Vault open",
-  "talus.vaults.interact.new_vault": "New vault discovered"
+  "talus.vaults.interact.new_vault": "New vault discovered",
+
+  "talus.vaults.pathfind.display_count": "%1$s unopened Vaults in %2$s block radius"
 }
