@@ -34,6 +34,8 @@ public class Talus implements ModInitializer
         // Proceed with mild caution.
 
         createConfigFolder();
+
+        TalusParticle.init();
     }
 
     private void createConfigFolder()

@@ -3,12 +3,16 @@ package steve6472.talus.vaults;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.TrailParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -95,6 +99,7 @@ public class VaultManager
 
             BlockPos hitPos = blockHitResult.getBlockPos();
             BlockState blockState = level.getBlockState(hitPos);
+
             if (blockState.getBlock() != Blocks.VAULT)
                 return InteractionResult.PASS;
 
@@ -135,6 +140,8 @@ public class VaultManager
         ClientPlayConnectionEvents.DISCONNECT.register((n, c) -> worldName = null);
 
         ClientCommandRegistrationCallback.EVENT.register(VaultsCommand::register);
+
+        ClientTickEvents.START_WORLD_TICK.register(VaultsRenderer::register);
     }
 
     public Collection<MemoryVault> getVaults(Vec3 center, int radius)
