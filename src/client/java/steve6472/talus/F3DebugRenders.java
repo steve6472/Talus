@@ -36,7 +36,7 @@ public class F3DebugRenders
         var groupCustom = id("custom");
         var groupLookAt = id("lookat");
 
-        DebugScreenEntries.register(id("talus_custom"), (displayer, level, clientChunk, serverChunk) ->
+        DebugScreenEntries.register(id("talus_basic"), (displayer, level, clientChunk, serverChunk) ->
         {
             Minecraft minecraft = Minecraft.getInstance();
             Entity entity = minecraft.getCameraEntity();
